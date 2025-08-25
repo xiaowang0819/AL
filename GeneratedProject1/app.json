@@ -1,0 +1,39 @@
+{
+  "id": "c344fb08-5b41-4a10-b6b4-bccacb44614c",
+  "name": "FW-Development",
+  "publisher": "FW",
+  "version": "1.0.0.1",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [
+    {
+      "id": "7fa9a594-d8c7-480a-ab85-fff178a47292",
+      "name": "Good Looking Documents",
+      "publisher": "Fenwick",
+      "version": "24.4.250502.1"
+    }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "26.0.0.0",
+  "idRanges": [
+    {
+      "from": 77000,
+      "to": 77999
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "15.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}

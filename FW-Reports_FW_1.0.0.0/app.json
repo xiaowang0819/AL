@@ -1,0 +1,41 @@
+{
+  "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
+  "name": "FW-Reports",
+  "publisher": "FW",
+  "version": "1.0.0.0",
+  "runtime": "15.0",
+  "target": "Cloud",
+  "platform": "26.0.38176.0",
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true,
+    "applyToDevExtension": false
+  },
+  "dependencies": [
+    {
+      "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "name": "Base Application",
+      "version": "26.3.36158.37931",
+      "publisher": "Microsoft"
+    },
+    {
+      "id": "7fa9a594-d8c7-480a-ab85-fff178a47292",
+      "name": "Good Looking Documents",
+      "publisher": "Fenwick",
+      "version": "24.4.250502.1"
+    },
+    {
+      "id": "ce8f7662-1bb5-4058-a4d2-57bebc14a7e8",
+      "name": "Fenwick Gold Account",
+      "publisher": "Fenwick",
+      "version": "23.5.250327.1"
+    }
+  ],
+  "idRanges": [
+    {
+      "from": 78000,
+      "to": 78999
+    }
+  ]
+}
