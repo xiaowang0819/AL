@@ -85,5 +85,24 @@ pageextension 77531 "ItemListAvailableQtyExt" extends "Item List"
         }
     }
 }
+pageextension 77541 "Sales Lines Extension" extends "Sales Lines"
+{
+    layout
+    {
+        addlast(Control1)
+        {
+            field("Blanket Order No."; Rec."Blanket Order No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Blanket Order';
+            }
+        }
+    }
+    
+    actions
+    {
+        
+    }
+}
 
 

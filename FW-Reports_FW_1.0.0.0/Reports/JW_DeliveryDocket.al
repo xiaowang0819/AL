@@ -1,9 +1,12 @@
+
+
 report 78002 "JW_DeliveryDocket"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = ALL;
     DefaultLayout = Word;
     WordLayout = './Layouts/JW_DeliveryDocket_Final.docx';
+
     dataset
     {
         dataitem(Header; "Sales Header")
@@ -25,9 +28,11 @@ report 78002 "JW_DeliveryDocket"
             column(ExternalDocNo; "External Document No.") { }
             column(ShipmentDate; "Shipment Date") { }
             column(SalesPersonName; "Salesperson Code") { }
-            column(WarehouseInstr; FSG_GLD_WarehouseInstructions) { }
-            column(DeliveryInstr; FSG_GLD_DeliveryInstructions) { }
             column(DocumentType; "Document Type") { }
+
+            column(WarehouseInstr; WarehouseInstr) { }
+            column(DeliveryInstr; DeliveryInstr) { }
+            column(CustomText2; CustomText2) { }
 
             dataitem(Line; "Sales Line")
             {
@@ -40,6 +45,8 @@ report 78002 "JW_DeliveryDocket"
                 column(ItemDescription; Description) { }
                 column(QuantityDigit; Quantity) { }
                 column(Quantity; QtyText) { }
+                column(Originally_Ordered_No_; "Originally Ordered No.") { }
+
                 trigger OnAfterGetRecord()
                 begin
                     if Type = Type::" " then
@@ -48,9 +55,28 @@ report 78002 "JW_DeliveryDocket"
                         QtyText := Format(Quantity, 0, '<Precision,0:0><Integer><Decimals>');
                 end;
             }
+
             trigger OnPreDataItem()
             begin
                 CurrReport.SetTableView(Header);
+            end;
+
+            trigger OnAfterGetRecord()
+            var
+                RecRef: RecordRef;
+                FldRef: FieldRef;
+            begin
+                WarehouseInstr := '';
+                DeliveryInstr := '';
+                CustomText2 := '';
+
+                RecRef.GetTable(Header);
+                FldRef := RecRef.Field(16037487);
+                WarehouseInstr := FldRef.Value();
+                FldRef := RecRef.Field(16037488);
+                DeliveryInstr := FldRef.Value();
+                FldRef := RecRef.Field(70256962);
+                CustomText2 := FldRef.Value();
             end;
         }
 
@@ -65,6 +91,10 @@ report 78002 "JW_DeliveryDocket"
             column(CompanyPhone; "Phone No.") { }
         }
     }
+
     var
         QtyText: Text[20];
+        WarehouseInstr: Text[250];
+        DeliveryInstr: Text[250];
+        CustomText2: Text[250];
 }
