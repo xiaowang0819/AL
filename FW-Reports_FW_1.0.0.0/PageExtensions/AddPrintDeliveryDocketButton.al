@@ -79,3 +79,50 @@ pageextension 78002 "Sales Lines Extension" extends "Sales Lines"
 
 
 }
+
+pageextension 78003 "Posted Sales Invoice Lines" extends "Posted Sales Invoice Lines"
+{
+    layout
+    {
+        addafter("Quantity")
+        {
+            field("BSO No."; Rec."Blanket Order No.")
+            {
+                ApplicationArea = All;
+                Caption = 'BSO No.';
+                ToolTip = 'Link to BSO No.';
+            }
+
+        }
+    }
+
+    actions
+    {
+
+    }
+
+}
+
+pageextension 78004 "Posted Sales Shipment Lines" extends "Posted Sales Shipment Lines"
+{
+    layout
+    {
+        addafter("Quantity")
+        {
+            field("BSO No."; Rec."Blanket Order No.")
+            {
+                ApplicationArea = All;
+                Caption = 'BSO No.';
+                ToolTip = 'Link to BSO No.';
+            }
+        }
+    }
+
+    actions
+    {
+
+    }
+
+}
+
+
