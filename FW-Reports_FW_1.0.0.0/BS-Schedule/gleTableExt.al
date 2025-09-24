@@ -20,6 +20,19 @@ tableextension 78101 GenLedgerEntryExt extends "G/L Entry"
         }
     }
 }
+permissionset 78102 "GL Reconcile"
+{
+    Assignable = true;
+    Caption = 'G/L Reconcile Entry Permissions';
+    Permissions =
+        tabledata "G/L Reconcile Entry" = RIMD; // Read, Insert, Modify, Delete
+}
+
+permissionsetextension 78103 "D365 Bus Full Access - Reconcile" extends "D365 BUS FULL ACCESS"
+{
+    Permissions =
+        tabledata "G/L Reconcile Entry" = RIMD;
+}
 
 table 78102 "G/L Reconcile Entry"
 {
@@ -61,6 +74,15 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
 {
     layout
     {
+        addfirst(Content)
+        {
+            field("SelectedTotal"; SelectedTotalAmountText)
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ShowCaption = false;
+            }
+        }
         addafter(Description)
         {
             field("Reconcile Ref No."; Rec."Reconcile Ref No.")
@@ -140,23 +162,38 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
         }
     }
 
-    // local procedure GetReconcileRefNo(): Code[20]
-    // var
-    //     ReconcileEntry: Record "G/L Reconcile Entry";
-    // begin
-    //     if ReconcileEntry.Get(Rec."Entry No.") then
-    //         exit(ReconcileEntry."Reconcile Ref No.");
-    //     exit('');
-    // end;
+    var
+        SelectedTotalAmount: Decimal;
+        SelectedTotalAmountText: Text[50];
 
-    // local procedure GetReconciled(): Boolean
-    // var
-    //     ReconcileEntry: Record "G/L Reconcile Entry";
-    // begin
-    //     if ReconcileEntry.Get(Rec."Entry No.") then
-    //         exit(ReconcileEntry.Reconciled);
-    //     exit(false);
-    // end;
+    local procedure UpdateSelectionTotal()
+    var
+        Selection: Record "G/L Entry";
+        Total: Decimal;
+    begin
+        CurrPage.SetSelectionFilter(Selection);
+        Total := 0;
+
+        if Selection.FindSet() then
+            repeat
+                Total += Selection.Amount;
+            until Selection.Next() = 0;
+
+        SelectedTotalAmount := Total;
+        SelectedTotalAmountText := StrSubstNo('Selected Total: %1', Format(SelectedTotalAmount));
+
+        CurrPage.Update(false);
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        UpdateSelectionTotal();
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        UpdateSelectionTotal();
+    end;
 }
 
 
@@ -252,5 +289,8 @@ page 78010 "G/L Reconcile Page"
                 TempGLEntries.Insert();
                 TotalAmount += SelectedEntries.Amount;
             until SelectedEntries.Next() = 0;
+        if ReferenceNo = '' then
+            ReferenceNo := Format(CurrentDateTime, 0, '<Year4><Month,2><Day,2><Hours24,2><Minutes,2><Seconds,2>');
+        // 示例：20250923154045
     end;
 }
