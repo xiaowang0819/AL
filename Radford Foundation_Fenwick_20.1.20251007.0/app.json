@@ -1,0 +1,47 @@
+{
+  "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",
+  "name": "Radford Foundation",
+  "publisher": "Fenwick",
+  "version": "20.1.20251007.0",
+  "privacyStatement": "https://www.fenwick.com.au/?privacy-policy",
+  "EULA": "https://www.fenwick.com.au/?software-license-terms",
+  "runtime": "15.0",
+  "showMyCode": true,
+  "target": "Cloud",
+  "application": "25.2.0.0",
+  "platform": "26.0.40118.0",
+  "features": [
+    "TRANSLATIONFILE"
+  ],
+  "dependencies": [
+    {
+      "id": "7fa9a594-d8c7-480a-ab85-fff178a47292",
+      "name": "Good Looking Documents",
+      "version": "19.0.0.0",
+      "publisher": "Fenwick Software"
+    },
+    {
+      "id": "fbd38f3d-18b3-4ec9-bb78-03d32f79cdbb",
+      "name": "Attach-It",
+      "version": "24.0.0.0",
+      "publisher": "Fenwick"
+    },
+    {
+      "id": "cf05d8b8-22aa-44ed-9ba8-a3a85d2a1504",
+      "name": "Data Integrator",
+      "version": "22.3.0.0",
+      "publisher": "Fenwick Software"
+    }
+  ],
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 50999
+    }
+  ],
+  "build": {
+    "by": "AL Language Extension,15.2.1630495",
+    "timestamp": "2025-10-06T21:59:33.7207161+00:00",
+    "compilerVersion": "15.2.24.57679"
+  }
+}

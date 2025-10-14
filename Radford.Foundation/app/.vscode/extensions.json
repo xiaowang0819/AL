@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "ms-dynamics-smb.al",
+        "ms-vsts.team",
+        "rasmus.al-formatter",
+        "mohsen1.prettify-json",
+        "streetsidesoftware.code-spell-checker",
+        "wayou.vscode-todo-highlight",
+    ]
+}

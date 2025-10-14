@@ -28,6 +28,7 @@
             "type": "al",
             "environmentType": "Sandbox",
             "environmentName": "Test",
+            "authentication": "AAD",
             "startupObjectId": 9006,
             "startupObjectType": "Page",
             "breakOnError": "All",
@@ -35,6 +36,14 @@
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
             "schemaUpdateMode": "Synchronize"
+        },
+        {
+            "name": "AL: Generated Download Symbols request",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "Test",
+            "tenant": "596d0466-886c-4e52-985f-b4d0f8a76c73"
         }
     ]
 }

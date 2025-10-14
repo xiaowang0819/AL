@@ -1,0 +1,116 @@
+{
+    "name": "Fenwick AL Client Ruleset",
+    "description": "The FSNDS lives on...",
+    "rules": [
+        {
+            "id": "AA0005",
+            "action": "None",
+            "justification": "BEGIN and END should not be optional. This improves readability."
+        },
+        {
+            "id": "AA0470",
+            "action": "None",
+            "justification": "Label variables do not require a comment explaining each % placeholder."
+        },
+        {
+            "id": "AA0072",
+            "action": "None",
+            "justification": "Variable names can remain in our existing standard for app development."
+        },
+        {
+            "id": "AA0218",
+            "action": "None",
+            "justification": "Tooltips can be ignored."
+        },
+        {
+            "id": "AS0001",
+            "action": "None",
+            "justification": "Tables can be delete."
+        },
+        {
+            "id": "AS0002",
+            "action": "None",
+            "justification": "Fields can be delete."
+        },
+        {
+            "id": "AS0004",
+            "action": "None",
+            "justification": "Fields can have type modified."
+        },
+        {
+            "id": "AS0005",
+            "action": "None",
+            "justification": "Fields can have name modified."
+        },
+        {
+            "id": "AS0006",
+            "action": "None",
+            "justification": "Tables can have name modified."
+        },
+        {
+            "id": "AS0007",
+            "action": "None",
+            "justification": "Properties can have value modified."
+        },
+        {
+            "id": "AS0008",
+            "action": "None",
+            "justification": "Keys can be modified."
+        },
+        {
+            "id": "AS0009",
+            "action": "None",
+            "justification": "Key fields can be modified."
+        },
+        {
+            "id": "AS0010",
+            "action": "None",
+            "justification": "Keys can be deleted."
+        },
+        {
+            "id": "AS0015",
+            "action": "None",
+            "justification": "Translations are not necessary."
+        },
+        {
+            "id": "AS0051",
+            "action": "None",
+            "justification": "Marketplace properties are not necessary."
+        },
+        {
+            "id": "AS0052",
+            "action": "None",
+            "justification": "Marketplace properties are not necessary."
+        },
+        {
+            "id": "AS0084",
+            "action": "None",
+            "justification": "Client apps must be allowed IDs in the 50000s range."
+        },
+        {
+            "id": "AS0053",
+            "action": "None",
+            "justification": "All 'target' properties are allowed."
+        },
+        {
+            "id": "AS0103",
+            "action": "None",
+            "justification": "Permissions sets are not explicitly required as they should be handled within the gold permission set setup/process."
+        },
+        {
+            "id": "PTE0003",
+            "action": "Warning",
+            "justification": "Functions may subscribe to CompanyOpen events"
+        },
+        {
+            "id": "PTE0004",
+            "action": "None",
+            "justification": "Tables do not require a matching permission set."
+        },
+        {
+            "id": "PTE0005",
+            "action": "Warning",
+            "justification": "'Internal' is allowed for the 'target' property."
+        }
+    ]
+}

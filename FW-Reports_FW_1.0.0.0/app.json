@@ -1,29 +1,36 @@
 {
-  "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
-  "name": "FW-Reports",
-  "publisher": "FW",
-  "version": "25.09.24.1101",
-  "runtime": "15.0",
-  "target": "Cloud",
-  "platform": "26.0.38176.0",
-  "resourceExposurePolicy": {
-    "allowDebugging": true,
-    "allowDownloadingSource": false,
-    "includeSourceInSymbolFile": false,
-    "applyToDevExtension": false
-  },
- "dependencies": [
+    "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
+    "name": "FW-Reports",
+    "publisher": "FW",
+    "version": "25.10.14.1115",
+    "runtime": "15.0",
+    "target": "Cloud",
+    "platform": "26.0.38176.0",
+    "resourceExposurePolicy": {
+        "allowDebugging": true,
+        "allowDownloadingSource": false,
+        "includeSourceInSymbolFile": false,
+        "applyToDevExtension": false
+    },
+    "dependencies": [
         {
-        "id":  "437dbf0e-84ff-417a-965d-ed2bb9650972",
-        "name": "Base Application",
-        "publisher": "Microsoft",
-        "version": "26.4.37194.39023"
+            "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+            "name": "Base Application",
+            "publisher": "Microsoft",
+            "version": "26.4.37194.39023"
+        },
+        {
+            "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",
+            "name": "Radford Foundation",
+            "publisher": "Fenwick",
+            "version": "20.0.0.0"
         }
     ],
-  "idRanges": [
-    {
-      "from": 78000,
-      "to": 78999
-    }
-  ]
+    "idRanges": [
+        {
+            "from": 78000,
+            "to": 78999
+        }
+    ],
+    "application": "26.5.38752.38944"
 }

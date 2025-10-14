@@ -1,0 +1,26 @@
+{
+    "editor.suggestSelection": "first",
+    "git.autofetch": true,
+    "al.enableCodeAnalysis": true,
+    "al.codeAnalyzers": [
+        "${CodeCop}",
+        "${UICop}",
+        "${AppSourceCop}",
+        "${PerTenantExtensionCop}"
+    ],
+    "al.ruleSetPath": "./.codeAnalysis/fenwick.ruleset.json",
+    "cSpell.enabled": true,
+    "cSpell.language": "en,en-GB,en-US",
+    "cSpell.words": [
+        "codeunit",
+        "Fenwick",
+        "rimd",
+        "pageextension",
+        "tableextension",
+        "addafter",
+        "addbefore",
+        "CurrPage",
+        "Curr",
+        "Subpart"
+    ],
+}

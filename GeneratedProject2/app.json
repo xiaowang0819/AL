@@ -1,0 +1,39 @@
+{
+    "id": "eb77b938-92fc-4bfe-8f21-7f12d04fc526",
+    "name": "GeneratedProject2",
+    "publisher": "Default Publisher",
+    "version": "1.0.0.0",
+    "brief": "",
+    "description": "",
+    "privacyStatement": "",
+    "EULA": "",
+    "help": "",
+    "url": "",
+    "logo": "",
+    "dependencies": [
+        {
+            "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",
+            "name": "Radford Foundation",
+            "publisher": "Fenwick",
+            "version": "20.1.20251009.0"
+        }
+    ],
+    "screenshots": [],
+    "platform": "1.0.0.0",
+    "application": "26.5.38752.38944",
+    "idRanges": [
+        {
+            "from": 50100,
+            "to": 80000
+        }
+    ],
+    "resourceExposurePolicy": {
+        "allowDebugging": true,
+        "allowDownloadingSource": true,
+        "includeSourceInSymbolFile": true
+    },
+    "runtime": "15.0",
+    "features": [
+        "NoImplicitWith"
+    ]
+}

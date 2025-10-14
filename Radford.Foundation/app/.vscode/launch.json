@@ -1,0 +1,45 @@
+{
+    "version":"0.2.0",
+    "configurations":[
+        {
+            "type":"al",
+            "request":"launch",
+            "name":"Microsoft cloud Development",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "tenant": "596d0466-886c-4e52-985f-b4d0f8a76c73",
+            "environmentType": "Sandbox",
+            "environmentName":"Dev",
+            "authentication": "AAD",
+            "enableLongRunningSqlStatements":true,
+            "enableSqlInformationDebugger":true,
+            //"schemaUpdateMode": "ForceSync"
+        },
+        {
+            "type":"al",
+            "request":"launch",
+            "name":"Microsoft cloud Test",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "tenant": "596d0466-886c-4e52-985f-b4d0f8a76c73",
+            "environmentType": "Sandbox",
+            "environmentName":"Test",
+            "authentication": "AAD",
+            "enableLongRunningSqlStatements":true,
+            "enableSqlInformationDebugger":true,
+        },
+        // {
+        //     "type":"al",
+        //     "request":"launch",
+        //     "name":"Microsoft cloud Production",
+        //     "breakOnError": true,
+        //     "launchBrowser": true,
+        //     "tenant": "596d0466-886c-4e52-985f-b4d0f8a76c73",
+        //     "environmentType": "Production",
+        //     "environmentName":"Production",
+        //     "authentication": "AAD",
+        //     "enableLongRunningSqlStatements":true,
+        //     "enableSqlInformationDebugger":true,
+        // }
+    ]
+}

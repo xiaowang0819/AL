@@ -18,6 +18,22 @@ tableextension 78101 GenLedgerEntryExt extends "G/L Entry"
             CalcFormula = lookup("G/L Reconcile Entry".Reconciled
                                  where("Entry No." = field("Entry No.")));
         }
+        field(78103; "Reconcile Remarks"; Text[50])
+        {
+            Caption = 'Reconcile Remarks';
+            DataClassification = CustomerContent;
+            ObsoleteState = Removed;
+            ;
+        }
+
+        field(78104; "ReconcileRemarks"; Text[50])
+        {
+            Caption = 'ReconcileRemarks';
+            // DataClassification = CustomerContent;
+
+            FieldClass = FlowField;
+            CalcFormula = lookup("G/L Reconcile Entry"."Reconcile Remarks" where("Entry No." = field("Entry no.")));
+        }
     }
 }
 permissionset 78102 "GL Reconcile"
@@ -59,6 +75,11 @@ table 78102 "G/L Reconcile Entry"
             Caption = 'Reconciled';
             DataClassification = CustomerContent;
         }
+        field(4; "Reconcile Remarks"; Text[50])
+        {
+            Caption = 'Reconcile Remarks';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -70,11 +91,14 @@ table 78102 "G/L Reconcile Entry"
     }
 }
 
-pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
+page 78011 "Selected Total"
 {
+    PageType = CardPart;
+    ApplicationArea = All;
+
     layout
     {
-        addfirst(Content)
+        area(content)
         {
             field("SelectedTotal"; SelectedTotalAmountText)
             {
@@ -83,8 +107,39 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
                 ShowCaption = false;
             }
         }
+    }
+
+    var
+        SelectedTotalAmountText: Text[50];
+
+    procedure SetText(NewText: Text)
+    begin
+        SelectedTotalAmountText := NewText;
+        CurrPage.Update();
+    end;
+}
+
+pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
+{
+    layout
+    {
+
+        addfirst(factboxes)
+        {
+            part(SelectedTotalFactbox; "Selected Total")
+            {
+                ApplicationArea = All;
+                Visible = true;
+            }
+        }
+
         addafter(Description)
         {
+            field("Reconcile Remarks"; Rec."ReconcileRemarks")//?????
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
             field("Reconcile Ref No."; Rec."Reconcile Ref No.")
             {
                 ApplicationArea = All;
@@ -173,7 +228,6 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
     begin
         CurrPage.SetSelectionFilter(Selection);
         Total := 0;
-
         if Selection.FindSet() then
             repeat
                 Total += Selection.Amount;
@@ -181,8 +235,7 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
 
         SelectedTotalAmount := Total;
         SelectedTotalAmountText := StrSubstNo('Selected Total: %1', Format(SelectedTotalAmount));
-
-        CurrPage.Update(false);
+        CurrPage.SelectedTotalFactbox.Page.SetText(SelectedTotalAmountText);
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -190,10 +243,10 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
         UpdateSelectionTotal();
     end;
 
-    trigger OnAfterGetRecord()
-    begin
-        UpdateSelectionTotal();
-    end;
+    // trigger OnAfterGetRecord()
+    // begin
+    //     UpdateSelectionTotal();
+    // end;
 }
 
 
@@ -218,6 +271,11 @@ page 78010 "G/L Reconcile Page"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                }
+                field("Reconcile Remarks"; ReconcileRemark)
+                {
+                    ApplicationArea = All;
+                    Editable = true;
                 }
             }
         }
@@ -274,12 +332,32 @@ page 78010 "G/L Reconcile Page"
                     CurrPage.Update(false);
                 end;
             }
+            action(UpdateRemarks)
+            {
+                Caption = 'Update Remarks';
+                ApplicationArea = All;
+                trigger OnAction()
+                var
+                    ReconcileEntry: Record "G/L Reconcile Entry";
+                begin
+                    if TempGLEntries.FindSet() then
+                        repeat
+                            if ReconcileEntry.Get(TempGLEntries."Entry No.") then begin
+                                ReconcileEntry."Reconcile Remarks" := ReconcileRemark; //?????
+                                ReconcileEntry.Modify(true);
+                            end;
+                        until TempGLEntries.Next() = 0;
+
+                    Message('Remarks updated for reference %1.', ReferenceNo);
+                end;
+            }
         }
     }
     var
         TempGLEntries: Record "G/L Entry" temporary;
         ReferenceNo: Code[20];
         TotalAmount: Decimal;
+        ReconcileRemark: Text[50];
 
     procedure SetSelectedRecords(var SelectedEntries: Record "G/L Entry")
     begin
@@ -291,6 +369,6 @@ page 78010 "G/L Reconcile Page"
             until SelectedEntries.Next() = 0;
         if ReferenceNo = '' then
             ReferenceNo := Format(CurrentDateTime, 0, '<Year4><Month,2><Day,2><Hours24,2><Minutes,2><Seconds,2>');
-        // 示例：20250923154045
+        ReconcileRemark := '';
     end;
 }
