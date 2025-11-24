@@ -1,0 +1,69 @@
+{
+    "id": "b3512f78-f1f0-405c-91a5-5a641363d933",
+    "name": "GeneratedProject3",
+    "publisher": "Default Publisher",
+    "version": "1.0.0.0",
+    "brief": "",
+    "description": "",
+    "privacyStatement": "",
+    "EULA": "",
+    "help": "",
+    "url": "",
+    "logo": "",
+    "dependencies": [
+        {
+            "id": "b3780cd9-f8f8-4a83-a4d5-0c2ad87b28af",
+            "name": "Sustainability",
+            "publisher": "Microsoft",
+            "version": "26.5.38752.38944"
+        },
+        {
+            "id": "1ba841c1-087c-4fb7-b0bf-35db594ce248",
+            "name": "Custom Fields",
+            "publisher": "Apportunix",
+            "version": "1.72.0.0"
+        },
+        {
+            "id": "3099ffc7-4cf7-4df6-9b96-7e4bc2bb587c",
+            "name": "Subscription Billing",
+            "publisher": "Microsoft",
+            "version": "26.5.38752.40837"
+        },
+        {
+            "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
+            "name": "FW-Reports",
+            "publisher": "FW",
+            "version": "25.10.30.2200"
+        },
+        {
+            "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",
+            "name": "Radford Foundation",
+            "publisher": "Fenwick",
+            "version": "20.1.20251001.0"
+        },
+        {
+            "id": "ec255f57-31d0-4ca2-b751-f2fa7c745abb",
+            "name": "Shopify Connector",
+            "publisher": "Microsoft",
+            "version": "26.5.38752.41160"
+        }
+    ],
+    "screenshots": [],
+    "platform": "1.0.0.0",
+    "application": "26.5.38752.38944",
+    "idRanges": [
+        {
+            "from": 50100,
+            "to": 50149
+        }
+    ],
+    "resourceExposurePolicy": {
+        "allowDebugging": true,
+        "allowDownloadingSource": true,
+        "includeSourceInSymbolFile": true
+    },
+    "runtime": "15.0",
+    "features": [
+        "NoImplicitWith"
+    ]
+}

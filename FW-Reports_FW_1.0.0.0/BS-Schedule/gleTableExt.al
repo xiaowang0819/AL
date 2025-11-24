@@ -202,8 +202,9 @@ pageextension 78005 GenLedgerEntryPageExt extends "General Ledger Entries"
                         //end;
                         until Selection.Next() = 0;
 
-                    if TotalAmount <> 0 then
-                        Error('Total amount of selected reconciled lines must be 0. Current total: %1', TotalAmount);
+                    if Abs(TotalAmount) > 1 then
+                        Error('Total amount of selected reconciled lines must be 0 (±1 allowed). Current total: %1', TotalAmount);
+
 
                     if Selection.FindSet() then
                         repeat
@@ -301,8 +302,8 @@ page 78010 "G/L Reconcile Page"
                     if not ReconcileEntry.IsEmpty then
                         Error('Reference %1 already exists.', ReferenceNo);
 
-                    if TotalAmount <> 0 then
-                        Error('Total amount must be 0 for reconciliation. Current total: %1', TotalAmount);
+                    if Abs(TotalAmount) > 1 then
+                        Error('Total amount of selected reconciled lines must be 0 (±1 allowed). Current total: %1', TotalAmount);
 
                     FirstLine := true;
                     if TempGLEntries.FindSet() then

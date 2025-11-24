@@ -38,6 +38,9 @@ query 78302 "JW Invoice Lines"
         {
             // column(DocType; const("INvoice")) { }
             column(DocNo; "Document No.") { }
+            column(Order_No_; "Order No.") { }
+            column(Posting_Date; "Posting Date") { }
+            column(Shipment_Date; "Shipment Date") { }
             column(LineNo; "Line No.") { }
             column(CustomerNo; "Sell-to Customer No.") { }
             column(CustomerName; "Sell-to Customer Name") { }
@@ -46,12 +49,13 @@ query 78302 "JW Invoice Lines"
             column(Description; Description) { }
             column(Description2; "Description 2") { }
             column(Qty; Quantity) { }
-            column(Amount; Amount) { }
+            column(Amount; "Amount") { }
             column(Cost; "Cost Amount") { }
             column(LineExtDoc; FS_RF_ExternalDocumentNo) { }
             column(BSONo; "Blanket Order No.") { }
             column(BSOLine; "Blanket Order Line No.") { }
             column(BSOExtDoc; BSOExtDoc) { }
+            column(ExchangeRate; ExchangeRate) { }
             dataitem(SIH; "Sales Invoice Header")
             {
                 DataItemLink = "No." = SIL."Document No.";
@@ -60,6 +64,7 @@ query 78302 "JW Invoice Lines"
                 column(INVExtDoc; "External Document No.") { }
                 column(Campaign; "Campaign No.") { }
                 column(ShipToCode; "Ship-to Code") { }
+                column(Payment_Method_Code; "Payment Method Code") { }
 
             }
         }
@@ -78,6 +83,9 @@ query 78303 "JW CM Lines"
         {
             // column(DocType; const("INvoice")) { }
             column(DocNo; "Document No.") { }
+            column(Order_No_; "Order No.") { }
+            column(Posting_Date; "Posting Date") { }
+            column(Shipment_Date; "Shipment Date") { }
             column(LineNo; "Line No.") { }
             column(CustomerNo; "Sell-to Customer No.") { }
             column(CustomerName; "Sell-to Customer Name") { }
@@ -92,6 +100,7 @@ query 78303 "JW CM Lines"
             column(BSONo; "Blanket Order No.") { }
             column(BSOLine; "Blanket Order Line No.") { }
             column(BSOExtDoc; BSOExtDoc) { }
+            column(ExchangeRate; ExchangeRate) { }
             dataitem(SCH; "Sales Cr.Memo Header")
             {
                 DataItemLink = "No." = SCL."Document No.";
@@ -100,6 +109,7 @@ query 78303 "JW CM Lines"
                 column(INVExtDoc; "External Document No.") { }
                 column(Campaign; "Campaign No.") { }
                 column(ShipToCode; "Ship-to Code") { }
+                column(Payment_Method_Code; "Payment Method Code") { }
 
             }
         }
@@ -129,63 +139,40 @@ query 78304 "JW 4345 lines"
             column(Source_Code; "Source Code") { }
             column(Source_No_; "Source No.") { }
             column(Source_Type; "Source Type") { }
+        }
+    }
 
-            // dataitem(SCL; "Sales Cr.Memo Line")
-            // {
-            //     DataItemLink = "Document No." = GLE4345."Document No.";
-            //     SqlJoinType = LeftOuterJoin;
+}
 
-            //     column(Type; Type) { }
-            //     column(No_; "No.") { }
-            //     column(ItemDescription; Description) { }
-            //     column(Description2; "Description 2") { }
-            //     column(Line_No_; "Line No.") { }
-            //     column(ItemQuantity; Quantity) { }
-            //     column(ItemAmount; Amount) { }
-            //     column(BSONo; "Blanket Order No.") { }
-            //     column(LineNo; "Blanket Order Line No.") { }
+query 78305 "Bank Entries"
 
-            //     dataitem(SCH; "Sales Cr.Memo Header")
-            //     {
-            //         DataItemLink = "No." = SCL."Document No.";
-            //         SqlJoinType = InnerJoin;
-            //         column(uRef; "Your Reference") { }
-            //         column(INVExtDoc; "External Document No.") { }
-            //         column(Campaign; "Campaign No.") { }
-            //         column(ShipToCode; "Ship-to Code") { }
+{
+    QueryType = Normal;
 
-            //     }
-            // }
-
-
-            // dataitem(SIL; "Sales Cr.Memo Line")
-            // {
-            //     DataItemLink = "Document No." = GLE4345."Document No.";
-            //     SqlJoinType = LeftOuterJoin;
-
-            //     column(Type; Type) { }
-            //     column(No_; "No.") { }
-            //     column(ItemDescription; Description) { }
-            //     column(Description2; "Description 2") { }
-            //     column(Line_No_; "Line No.") { }
-            //     column(ItemQuantity; Quantity) { }
-            //     column(ItemAmount; Amount) { }
-            //     column(BSONo; "Blanket Order No.") { }
-            //     column(LineNo; "Blanket Order Line No.") { }
-
-            //     dataitem(SIH; "Sales Cr.Memo Header")
-            //     {
-            //         DataItemLink = "No." = SIL."Document No.";
-            //         SqlJoinType = InnerJoin;
-            //         column(uRef; "Your Reference") { }
-            //         column(INVExtDoc; "External Document No.") { }
-            //         column(Campaign; "Campaign No.") { }
-            //         column(ShipToCode; "Ship-to Code") { }
-
-            //     }
-            // }
-
-
+    elements
+    {
+        dataitem(BankEntries; "Bank Account Ledger Entry")
+        {
+            column(Entry_No; "Entry No.") { }
+            column(Posting_Date; "Posting Date") { }
+            column(Document_No_; "Document No.") { }
+            column(Bank_Account_No; "Bank Account No.") { }
+            column(Description; Description) { }
+            column(Amount; Amount) { }
+            column(Amount__LCY; "Amount (LCY)") { }
+            column(Currency_Code; "Currency Code") { }
+            column(Bal__Account_Type; "Bal. Account Type") { }
+            column(Bal__Account_No; "Bal. Account No.") { }
+            dataitem(ETFVendor; "Vendor Ledger Entry")
+            {
+                DataItemLink = "Document No." = BankEntries."Document No.", "Posting Date" = BankEntries."Posting Date";
+                SqlJoinType = LeftOuterJoin;
+                column(Vendor_No_; "Vendor No.") { }
+                column(Vendor_Amount; Amount) { }
+                column(Vendor_Amount__LCY; "Amount (LCY)") { }
+                column(Vendor_Currency_Code; "Currency Code") { }
+                column(Vendor_Description; Description) { }
+            }
         }
     }
 

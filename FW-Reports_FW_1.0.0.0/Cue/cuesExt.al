@@ -11,10 +11,26 @@ tableextension 78400 "Activities Cue Extension" extends "Activities Cue"
                     "Document Type" = CONST(Order),
                     "Completely Shipped" = CONST(false),
                     "FS_RF_ReadyForShipping" = CONST(true),
-                    "No." = FILTER('<>SERV*')
+                    "No." = FILTER('<>SERV*'),
+                    "Campaign No." = filter('')
                 )
             );
         }
+
+        // field(78402; "Project Order Released"; Integer)
+        // {
+        //     Caption = 'Project Order Released';
+        //     FieldClass = FlowField;
+        //     CalcFormula = Count("Sales Header"
+        //         WHERE(
+        //             "Document Type" = CONST(Order),
+        //             "Completely Shipped" = CONST(false),
+        //             "FS_RF_ReadyForShipping" = CONST(true),
+        //             "No." = FILTER('<>SERV*'),
+        //             "Responsibility Center" = filter('<>''')
+        //         )
+        //     );
+        // }
     }
 }
 
@@ -28,11 +44,22 @@ pageextension 78401 "Add Non-SRV SO Tile" extends FS_RF_WarehouseRCActivities
             field("Non-SRV Released SO"; Rec."Non-SRV Released SO")
             {
                 ApplicationArea = All;
-                Caption = 'Non-SRV Released SO';
+                Caption = 'Non-SRV SO Released';
                 DrillDownPageId = "Sales Order List";
-                ToolTip = 'Sales orders ready to ship, not shipped, and not starting with SERV.';
+                ToolTip = 'Non project and Non service Sales orders ready to ship';
             }
         }
+
+        // addafter(FS_RF_SOWaitingRelease)
+        // {
+        //     field("Non-SRV Released SO"; Rec."Non-SRV Released SO")
+        //     {
+        //         ApplicationArea = All;
+        //         Caption = 'Non-SRV SO Released';
+        //         DrillDownPageId = "Sales Order List";
+        //         ToolTip = 'Sales orders ready to ship, not shipped, and not starting with SERV.';
+        //     }
+        // }
 
         modify(FS_RF_SOReleasedOrders)
         {
