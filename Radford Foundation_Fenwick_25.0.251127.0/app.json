@@ -1,0 +1,32 @@
+{
+  "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",
+  "name": "Radford Foundation",
+  "publisher": "Fenwick",
+  "version": "26.03.26.1400",
+  "privacyStatement": "https://www.fenwick.com.au/?privacy-policy",
+  "EULA": "https://www.fenwick.com.au/?software-license-terms",
+  "runtime": "15.0",
+  "resourceExposurePolicy": {
+        "allowDebugging": true,
+        "allowDownloadingSource": true,
+        "includeSourceInSymbolFile": true,
+        "applyToDevExtension": false
+  },
+  "target": "Cloud",
+  "application": "27.0.0.0",
+  "platform": "27.0.0.0",
+  "dependencies": [
+    {
+      "id": "7fa9a594-d8c7-480a-ab85-fff178a47292",
+      "name": "Good Looking Documents",
+      "version": "19.0.0.0",
+      "publisher": "Fenwick Software"
+    }
+  ],
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 50999
+    }
+  ]
+}
