@@ -5,6 +5,9 @@ PageExt
 78010 Sales quotes
 78011 PostedSalesInvoiceExt
 78012 PostedSalesInvoice (for commercialInvoice button)
+78013 POExtension
+78014 POlinesExt
+78015 QuoteDownload
 
 
 
@@ -12,3 +15,10 @@ Reports
 78002 DeliveryDocket
 78003 BatchInvoices
 78004 CommercialInvoice
+78005 CommercialInvoice_SO
+
+TableExt
+78014 POlinesTableExt
+
+
+Now at salesquote download button. waiting for Fenwick to refresh data to test

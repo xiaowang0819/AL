@@ -46,6 +46,7 @@ query 78302 "JW Invoice Lines"
             column(CustomerName; "Sell-to Customer Name") { }
             column(Type; Type) { }
             column(No; "No.") { }
+            column(Item_Reference_No_; "Item Reference No.") { }
             column(Description; Description) { }
             column(Description2; "Description 2") { }
             column(Qty; Quantity) { }
@@ -91,6 +92,7 @@ query 78303 "JW CM Lines"
             column(CustomerName; "Sell-to Customer Name") { }
             column(Type; Type) { }
             column(No; "No.") { }
+            column(Item_Reference_No_; "Item Reference No.") { }
             column(Description; Description) { }
             column(Description2; "Description 2") { }
             column(Qty; Quantity) { }

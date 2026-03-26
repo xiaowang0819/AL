@@ -19,6 +19,23 @@ pageextension 78001 SalesOrderExt extends "Sales Order"
                 end;
             }
         }
+        addlast("&Print")
+        {
+            action(PrintCommercialInvoice)
+            {
+                ApplicationArea = All;
+                Caption = 'Print JW-ComInvoice';
+                Image = Print;
+
+                trigger OnAction()
+                var
+                    SalesHeader: Record "Sales Header";
+                begin
+                    SalesHeader.SetRange("No.", Rec."No.");
+                    Report.RunModal(78005, true, true, SalesHeader);
+                end;
+            }
+        }
     }
 }
 
@@ -197,6 +214,11 @@ pageextension 78002 "Sales Lines Extension" extends "Sales Lines"
                 ApplicationArea = All;
                 Caption = 'Opportunity';
             }
+            field("Item_Reference_No_"; Rec."Item Reference No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Item_Reference_No_';
+            }
 
         }
     }
@@ -300,6 +322,34 @@ tableextension 78201 PostedSalesInvoiceLineExt extends "Sales Invoice Line"
             CalcFormula = lookup("Sales Invoice Header"."Currency Code"
                                  where("No." = field("Document No.")));
         }
+        field(78208; "State"; text[30])
+        {
+            Caption = 'State';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Sales Invoice Header"."Ship-to County"
+                                 where("No." = field("Document No.")));
+        }
+        field(78209; "Contact"; text[100])
+        {
+            Caption = 'Contact';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Sales Invoice Header"."Ship-to Contact"
+                                 where("No." = field("Document No.")));
+        }
+        field(78210; "Store_name"; text[100])
+        {
+            Caption = 'Store_name';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Sales Invoice Header"."Ship-to Name"
+                                 where("No." = field("Document No.")));
+        }
+        field(78211; "Order_date"; Date)
+        {
+            Caption = 'Order_date';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Sales Invoice Header"."Order Date"
+                                 where("No." = field("Document No.")));
+        }
 
     }
 }
@@ -383,7 +433,30 @@ pageextension 78003 "Posted Sales Invoice Lines" extends "Posted Sales Invoice L
                 Caption = 'Currency Code';
                 ToolTip = 'Currency code';
             }
-
+            field(State; Rec.State)
+            {
+                ApplicationArea = All;
+                Caption = 'State';
+                ToolTip = 'State';
+            }
+            field(Contact; Rec.Contact)
+            {
+                ApplicationArea = All;
+                Caption = 'Contact';
+                ToolTip = 'Contact';
+            }
+            field(Store_name; Rec.Store_name)
+            {
+                ApplicationArea = All;
+                Caption = 'Store_name';
+                ToolTip = 'Store_name';
+            }
+            field(Order_date; Rec.Order_date)
+            {
+                ApplicationArea = All;
+                Caption = 'Order_date';
+                ToolTip = 'Order_date';
+            }
         }
     }
 
@@ -417,13 +490,13 @@ tableextension 78203 PostedSalesShipmentLineExt extends "Sales Shipment Line"
 {
     fields
     {
-        field(78201; "Your Reference"; Text[50])
-        {
-            Caption = 'Your Reference';
-            FieldClass = FlowField;
-            CalcFormula = lookup("Sales Invoice Header"."Your Reference"
-                                 where("No." = field("Document No.")));
-        }
+        // field(78201; "Your Reference"; Text[50])
+        // {
+        //     Caption = 'Your Reference';
+        //     FieldClass = FlowField;
+        //     CalcFormula = lookup("Sales Invoice Header"."Your Reference"
+        //                          where("No." = field("Document No.")));
+        // }
         field(78202; "SO Ext Doc No."; Text[50])
         {
             Caption = 'SO Level Ext Doc No.';
@@ -490,12 +563,12 @@ pageextension 78004 "Posted Sales Shipment Lines" extends "Posted Sales Shipment
                 Caption = 'BSO Line No.';
                 ToolTip = 'BSO Line No.';
             }
-            field("Your Reference"; Rec."Your Reference")
-            {
-                ApplicationArea = All;
-                Caption = 'Your Reference';
-                ToolTip = 'Your Reference';
-            }
+            // field("Your Reference"; Rec."Your Reference")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Your Reference';
+            //     ToolTip = 'Your Reference';
+            // }
             field("So Level Ext Doc No."; Rec."SO Ext Doc No.")
             {
                 ApplicationArea = All;
