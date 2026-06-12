@@ -83,6 +83,28 @@ report 78004 "JW Commercial Invoice"
 
 pageextension 78012 JW_PostedSI extends "Posted Sales Invoice"
 {
+
+    layout
+    {
+        modify("Document Date")
+        {
+            Visible = false;
+        }
+        addlast(General)
+        {
+            field("Order Date"; rec."Order Date")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+
+
+        }
+        moveafter("Due Date"; "Shipment Date")
+        moveafter("Due Date"; "WSB Date 3")
+        moveafter("Order Date"; "WSB Date 2")
+
+    }
     actions
     {
         addlast(processing)

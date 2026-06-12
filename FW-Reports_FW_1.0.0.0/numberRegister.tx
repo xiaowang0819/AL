@@ -8,6 +8,12 @@ PageExt
 78013 POExtension
 78014 POlinesExt
 78015 QuoteDownload
+78016 Cityrepor
+78017 quoteexitcheck
+78018 prevent send invoice to City
+
+
+
 
 
 
@@ -19,6 +25,29 @@ Reports
 
 TableExt
 78014 POlinesTableExt
+78015 itemmapping
+
+Queries
+78301
+78302
+78303
+78304
+78305 Bank entries
+78307 CityReportOrder
+78308 CityreportInvoice
+78309 Items query
+
+Code unit
+78401
+78402 item list update
+78403 item list 
+78404 prevent email sending
+78405 
+
+
+Permission
+78015
+
 
 
 Now at salesquote download button. waiting for Fenwick to refresh data to test

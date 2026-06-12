@@ -1,5 +1,31 @@
 pageextension 78001 SalesOrderExt extends "Sales Order"
 {
+    layout
+    {
+        modify("Document Date")
+        {
+            Visible = false;
+        }
+        modify("Order Date")
+        {
+            Editable = false;
+        }
+        modify("WSB Date 1")
+        {
+            Editable = false;
+        }
+        modify("WSB Code 2")
+        {
+            Editable = false;
+        }
+
+        moveafter("Due Date"; "WSB Date 3")
+        moveafter("Due Date"; "Shipment Date")
+        moveafter("Order Date"; "WSB Date 2")
+        moveafter(FS_RF_ReadyForShipping; "WSB Checkbox 1")
+        moveafter("Completely Shipped"; "WSB Text 3")
+        moveafter("Your Reference"; "WSB Checkbox 2")
+    }
     actions
     {
         addlast("&Print")

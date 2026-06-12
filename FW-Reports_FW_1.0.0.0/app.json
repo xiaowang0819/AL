@@ -2,7 +2,7 @@
     "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
     "name": "FW-Reports",
     "publisher": "FW",
-    "version": "26.03.23.1700",
+    "version": "26.06.12.1700",
     "runtime": "15.0",
     "target": "Cloud",
     "platform": "26.0.38176.0",
@@ -24,6 +24,12 @@
             "name": "Radford Foundation",
             "publisher": "Fenwick",
             "version": "20.0.0.0"
+        },
+        {
+            "id": "1ba841c1-087c-4fb7-b0bf-35db594ce248",
+            "name": "Custom Fields",
+            "publisher": "Apportunix",
+            "version": "1.78.0.0"
         }
     ],
     "idRanges": [

@@ -24,11 +24,12 @@ report 78003 "JW Batch Invoice Combined"
         }
         dataitem(SIH; "Sales Invoice Header")
         {
-            RequestFilterFields = "Sell-to Customer No.", "Posting Date";
+            RequestFilterFields = "Sell-to Customer No.", "Posting Date", Amount, "WSB Code 2";
 
             column(InvoiceNo; "No.") { }
             column(ExternalDoc; "External Document No.") { }
             column(Reference; "Your Reference") { }
+            column(CityReference; "WSB Code 2") { }
             column(Amount; Amount) { }
             column(GST; "Amount Including VAT" - Amount) { }
             column(AmountIncl; "Amount Including VAT") { }
@@ -36,13 +37,38 @@ report 78003 "JW Batch Invoice Combined"
             column(CustomerNo; "Sell-to Customer No.") { }
             column(SalesPerson; "Salesperson Code") { }
             column(PostingDate; "Posting Date") { }
+            column(Order_Date; "Order Date") { }
+            column(supplierPO; "WSB Code 2") { }
+            column(EmployeeNO; "Ship-to Contact") { }
+
+            dataitem(SIL; "Sales Invoice Line")
+            {
+                DataItemLink = "Document No." = FIELD("No.");
+                DataItemTableView = SORTING("Document No.", "Line No.");
+
+                column(LineNo; "Line No.") { }
+                column(ItemNo; "No.") { }
+                column(SupplierPONo; SIH."WSB Code 2") { }
+                column(Posting_Date; "Posting Date") { }
+                column(EmployeeNum; SIH."Ship-to Contact") { }
+                column(ReferenceNum; SIH."Your Reference") { }
+                column(Job_No_; "Job No.") { }
+                column(Jobnum2; SIH."External Document No.") { }
+                column(Document_No_; "Document No.") { }
+                column(Description; Description) { }
+                column(Quantity; Quantity) { }
+                column(UnitPrice; "Unit Price") { }
+                column(LineAmount; Amount) { }
+                column(LineAmountInclVAT; "Amount Including VAT") { }
+            }
 
             trigger OnPreDataItem()
             begin
-                FilterPostingDate := GetFilter("Posting Date");
+                FilterPostingDate := Format(Today);
+                TaxRefNo := Format(Today, 0, '<Year4><Month,2><Day,2>');
                 FilterCustomerNo := GetFilter("Sell-to Customer No.");
-                if (FilterPostingDate = '') or (FilterCustomerNo = '') then
-                    Error('You must set filter value for both Posting Date and Sell-to Customer No.');
+
+
             end;
 
 
@@ -50,39 +76,14 @@ report 78003 "JW Batch Invoice Combined"
             begin
                 TotalExGST += Amount;
                 TotalIncGST += "Amount Including VAT";
+                if InvoiceNoFilter = '' then
+                    InvoiceNoFilter := "No."
+                else
+                    InvoiceNoFilter += '|' + "No.";
             end;
+
+
         }
-
-        dataitem(SCR; "Sales Cr.Memo Header")
-        {
-            RequestFilterFields = "Sell-to Customer No.", "Posting Date";
-
-            column(CMNo; "No.") { }
-            column(CM_ExternalDoc; "External Document No.") { }
-            column(CM_Reference; "Your Reference") { }
-            column(CM_Amount; Amount) { }
-            column(CM_GST; ("Amount Including VAT" - Amount)) { }
-            column(CM_AmountIncl; "Amount Including VAT") { }
-            column(CM_CustomerName; "Sell-to Customer Name") { }
-            column(CM_CustomerNo; "Sell-to Customer No.") { }
-            column(CM_SalesPerson; "Salesperson Code") { }
-            column(CM_PostingDate; "Posting Date") { }
-            trigger OnPreDataItem()
-            begin
-                CMFilterPostingDate := GetFilter("Posting Date");
-                CMFilterCustomerNo := GetFilter("Sell-to Customer No.");
-                if (CMFilterPostingDate = '') or (CMFilterCustomerNo = '') then
-                    Error('You must set filter value for both Posting Date and Sell-to Customer No.');
-            end;
-
-
-            trigger OnAfterGetRecord()
-            begin
-                TotalExGST -= Amount;
-                TotalIncGST -= "Amount Including VAT";
-            end;
-        }
-
 
         dataitem(Totals; Integer)
         {
@@ -92,9 +93,29 @@ report 78003 "JW Batch Invoice Combined"
             column(TotalIncGSTCol; TotalIncGST) { }
             column(TotalGSTCol; TotalIncGST - TotalExGST) { }
             column(DateFilter; FilterPostingDate) { }
+            column(TaxRef; TaxRefNo) { }
             column(CustomerFilter; FilterCustomerNo) { }
 
         }
+    }
+    requestpage
+    {
+        trigger OnOpenPage()
+        begin
+            // 默认日期：最近7天 (Today 往前推6天，加上今天正好7天)
+            if SIH.GetFilter("Posting Date") = '' then
+                SIH.SetRange("Posting Date", CalcDate('<-6D>', Today), Today);
+
+            // 默认客户
+            if SIH.GetFilter("Sell-to Customer No.") = '' then
+                SIH.SetFilter("Sell-to Customer No.", 'C00001');
+
+            // 默认金额
+            if SIH.GetFilter(Amount) = '' then
+                SIH.SetFilter(Amount, '<=750');
+            if SIH.GetFilter("WSB Code 2") = '' then
+                SIH.SetFilter("WSB Code 2", '<>""');
+        end;
     }
 
 
@@ -104,14 +125,14 @@ report 78003 "JW Batch Invoice Combined"
         SIHRec: Record "Sales Invoice Header";
         FilterPostingDate: Text;
         FilterCustomerNo: Text;
-
-        CMFilterPostingDate: Text;
-        CMFilterCustomerNo: Text;
+        InvoiceNoFilter: Text;
+        TaxRefNo: Text;
 
     trigger OnPreReport()
     begin
         TotalExGST := 0;
         TotalIncGST := 0;
+        InvoiceNoFilter := '';
     end;
 
     trigger OnPostReport()
@@ -119,33 +140,24 @@ report 78003 "JW Batch Invoice Combined"
     var
         Printer: Codeunit "JW_BatchPrinter";
     begin
-        Printer.PrintDocs(FilterPostingDate, FilterCustomerNo);
+        if InvoiceNoFilter <> '' then
+            Printer.PrintDocs(InvoiceNoFilter);
     end;
-
-    // var
-    //     PrintSIH: Record "Sales Invoice Header";
-    //     PrintSCR: Record "Sales Cr.Memo Header";
-    // begin
-
-    //     PrintSIH.Reset();
-    //     PrintSIH.SetFilter("Posting Date", FilterPostingDate);
-    //     PrintSIH.SetFilter("Sell-to Customer No.", FilterCustomerNo);
-    //     if PrintSIH.FindSet() then begin
-    //         Report.RunModal(16037491, false, false, PrintSIH);
-    //     end;
-    //     // PrintSCR.Reset();
-    //     // PrintSCR.SetFilter("Posting Date", FilterPostingDate);
-    //     // PrintSCR.SetFilter("Sell-to Customer No.", FilterCustomerNo);
-    //     // if PrintSCR.FindSet() then begin
-    //     //     Report.RunModal(16037492, false, false, PrintSCR);
-    //     // end;
-    // end;
 
 }
 
 
 pageextension 78011 JW_PostedSalesInvoiceExt extends "Posted Sales Invoices"
 {
+    layout
+    {
+        moveafter("Due Date"; "Shipment Date")
+        moveafter("Due Date"; "WSB Date 3")
+        moveafter(FS_RF_OrderDate; "WSB Date 2")
+
+
+
+    }
     actions
     {
         addlast("&Invoice")
@@ -170,19 +182,17 @@ pageextension 78011 JW_PostedSalesInvoiceExt extends "Posted Sales Invoices"
 
 codeunit 78000 JW_BatchPrinter
 {
-    procedure PrintDocs(FilterPostingDate: Text; FilterCustomer: Text)
+    procedure PrintDocs(InvoiceNos: Text)
     var
         SIH: Record "Sales Invoice Header";
-        SCR: Record "Sales Cr.Memo Header";
     begin
-        SIH.SetFilter("Posting Date", FilterPostingDate);
-        SIH.SetFilter("Sell-to Customer No.", FilterCustomer);
-        if SIH.FindSet() then
-            Report.RunModal(16037491, true, false, SIH);
+        if InvoiceNos = '' then
+            exit;
 
-        SCR.SetFilter("Posting Date", FilterPostingDate);
-        SCR.SetFilter("Sell-to Customer No.", FilterCustomer);
-        if SCR.FindSet() then
-            Report.RunModal(16037492, true, false, SCR);
+        // 直接用收集到的 Invoice Numbers 进行过滤
+        SIH.SetFilter("No.", InvoiceNos);
+        if SIH.FindSet() then
+            // 第二个参数 ReqWindow = false，直接静默跳过请求页面
+            Report.RunModal(16037491, true, false, SIH);
     end;
 }
