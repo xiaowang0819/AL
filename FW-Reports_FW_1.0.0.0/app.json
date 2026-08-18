@@ -2,7 +2,7 @@
     "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
     "name": "FW-Reports",
     "publisher": "FW",
-    "version": "26.06.12.1700",
+    "version": "26.07.28.1700",
     "runtime": "15.0",
     "target": "Cloud",
     "platform": "26.0.38176.0",
@@ -30,6 +30,12 @@
             "name": "Custom Fields",
             "publisher": "Apportunix",
             "version": "1.78.0.0"
+        },
+        {
+            "id": "7fa9a594-d8c7-480a-ab85-fff178a47292",
+            "name": "Good Looking Documents",
+            "publisher": "Fenwick",
+            "version": "26.0.0.0"
         }
     ],
     "idRanges": [

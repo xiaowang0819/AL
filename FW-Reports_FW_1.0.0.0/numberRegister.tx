@@ -11,7 +11,15 @@ PageExt
 78016 Cityrepor
 78017 quoteexitcheck
 78018 prevent send invoice to City
-
+78019 item lookup
+78020 item journal
+78021 sale quote subform
+78022 sales order list
+78023 CityFM_Technicians
+78024 CityFM_Technicians ext sales order
+78025 ship to address ext
+78026 upload CityFM Technician list
+78027 sales quote ext
 
 
 
@@ -26,6 +34,9 @@ Reports
 TableExt
 78014 POlinesTableExt
 78015 itemmapping
+78016 itemjournal
+78017 sales line
+78018 CityFM_Technician_List
 
 Queries
 78301
@@ -42,11 +53,12 @@ Code unit
 78402 item list update
 78403 item list 
 78404 prevent email sending
-78405 
-
+78405 permission 
+78406 permission
 
 Permission
-78015
+78015 itemmaaping permission
+78016 CityFM_technician_liat permission
 
 
 

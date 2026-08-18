@@ -302,7 +302,14 @@ codeunit 50000 FS_RF_Utilities
     begin
         if not (SalesLine."Document Type" in [SalesLine."Document Type"::Order, SalesLine."Document Type"::Quote, SalesLine."Document Type"::Invoice]) then exit;
         if SalesLine."No." = '' then exit;
-        if not (SalesLine.Type in [SalesLine.Type::Item, SalesLine.Type::"G/L Account", SalesLine.Type::Resource]) then exit;
+        //if not (SalesLine.Type in [SalesLine.Type::Item, SalesLine.Type::"G/L Account", SalesLine.Type::Resource]) then exit;
+        if SalesLine.Type <> SalesLine.Type::Resource then begin
+            SalesLine.FS_RF_ContractorUnitCost := 0;
+            SalesLine.FS_RF_ContractorCostAmount := 0;
+            SalesLine.FS_RF_ContractorAmountInclGST := 0;
+            SalesLine.FS_RF_ContractorGSTPercent := 0;
+            exit;
+        end;
         SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
         if SalesHeader.FS_RF_ServiceProvider = '' then exit;
         if (CalledByFieldNo = SalesLine.FieldNo(Quantity)) and (SalesLine.FS_RF_ContractorUnitCost <> 0) then begin

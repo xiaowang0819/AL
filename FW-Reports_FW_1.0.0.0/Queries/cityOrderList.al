@@ -106,6 +106,17 @@ query 78308 "weeklyCityAutoInvoices"
             column(ShipVia; "Shipment Method Code") { }
             column(Posting_Date; "Posting Date") { }
             column(WSB_Code_2; "WSB Code 2") { }
+            // 🌟 新增自定义列 ym：利用 SQL 表达式直接将日期转为 YYYYMM 文本格式
+            column(postingYear; "Posting Date")
+            {
+                Method = Year;
+            }
+
+            // 🌟 提取月份（变成纯数字整数）
+            column(postingMonth; "Posting Date")
+            {
+                Method = Month;
+            }
 
             dataitem(Sales_Invoice_Line; "Sales Invoice Line")
             {
@@ -130,7 +141,7 @@ query 78308 "weeklyCityAutoInvoices"
     var
         StartDate: Date;
     begin
-        StartDate := CalcDate('<-CM>', Today);
+        StartDate := CalcDate('<-13M>', Today);
 
         // 过滤过去 7 天内发货/过账的数据
         CurrQuery.SetFilter(Posting_Date, '%1..%2', StartDate, Today); //need to be updated to production.
@@ -242,17 +253,367 @@ codeunit 78404 "SystemMailInterceptor"
         MailSubject: Text;
     begin
         MailSubject := EmailMessage.GetSubject();
-        SalesInvoiceHeader.SetFilter("Sell-to Customer No.", 'C00001'); // 先给个大概范围提升效率，或者直接用下面的循环
+        SalesInvoiceHeader.SetFilter("Sell-to Customer No.", 'C00001');
 
         if SalesInvoiceHeader.FindSet() then begin
             repeat
                 if MailSubject.Contains(SalesInvoiceHeader."No.") then begin
-                    // 找到了匹配的发票，判断字段
                     if SalesInvoiceHeader."WSB Checkbox 2" = true then
                         Error('This is a Fast Order invoice. Donnot send the individual invoice. Weekly invoice will be sent on Sunday night autometically.');
                     break;
                 end;
             until SalesInvoiceHeader.Next() = 0;
         end;
+    end;
+}
+
+table 78018 "CityFM_Technician_List"
+{
+    Caption = 'CityFM Technician List';
+    DataClassification = CustomerContent;
+
+    fields
+    {
+        field(1; EmpNo; Text[30])
+        {
+            Caption = 'Emp No';
+            DataClassification = CustomerContent;
+        }
+        field(2; Brand; Text[50])
+        {
+            Caption = 'Brand';
+            DataClassification = CustomerContent;
+        }
+        field(3; State; Text[30])
+        {
+            Caption = 'State';
+            DataClassification = CustomerContent;
+        }
+        field(4; EmpName; Text[100])
+        {
+            Caption = 'Emp Name';
+            DataClassification = CustomerContent;
+        }
+        field(5; EmpCode; Text[50])
+        {
+            Caption = 'Emp Code';
+            DataClassification = CustomerContent;
+        }
+        field(6; MobileNo; Text[30])
+        {
+            Caption = 'Mobile No';
+            DataClassification = CustomerContent;
+        }
+        field(7; Email; Text[100])
+        {
+            Caption = 'Email';
+            DataClassification = CustomerContent;
+        }
+    }
+
+    keys
+    {
+        key(PK; EmpNo)
+        {
+            Clustered = true;
+        }
+    }
+
+    // 设置在 Lookup 弹出框中默认显示的字段，并允许通过名字和电话搜素
+    fieldgroups
+    {
+        fieldgroup(DropDown; EmpName, MobileNo, EmpCode, EmpNo) { }
+        fieldgroup(Brick; EmpName, MobileNo, EmpCode) { }
+    }
+}
+page 78023 "CityFM_Technicians"
+{
+    ApplicationArea = All;
+    Caption = 'CityFM Technicians';
+    PageType = List;
+    SourceTable = "CityFM_Technician_List";
+    UsageCategory = Lists;
+    Editable = false;
+    Permissions = tabledata "CityFM_Technician_List" = r;
+
+    layout
+    {
+        area(content)
+        {
+            repeater(General)
+            {
+                field(EmpNo; Rec.EmpNo)
+                {
+                    ToolTip = 'Specifies the Employee Number.';
+                }
+                field(EmpName; Rec.EmpName)
+                {
+                    ToolTip = 'Specifies the Employee Name.';
+                }
+                field(MobileNo; Rec.MobileNo)
+                {
+                    ToolTip = 'Specifies the Mobile Number.';
+                }
+                field(EmpCode; Rec.EmpCode)
+                {
+                    ToolTip = 'Specifies the Employee Code.';
+                }
+                // field(Brand; Rec.Brand)
+                // {
+                //     ToolTip = 'Specifies the Brand.';
+                // }
+                // field(State; Rec.State)
+                // {
+                //     ToolTip = 'Specifies the State.';
+                // }
+                field(Email; Rec.Email)
+                {
+                    ToolTip = 'Specifies the Email Address.';
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(processing)
+        {
+            action(ImportData)
+            {
+                ApplicationArea = All;
+                Caption = 'Import / Update Data';
+                Image = Import;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Paste data from Excel to insert or update technicians.';
+
+                trigger OnAction()
+                var
+                    ImportPage: Page "CityFM_Tech_Import";
+                begin
+                    // 1. 打开弹窗
+                    ImportPage.RunModal();
+
+                    // 2. 导入完成后刷新当前 List 页面，立刻看到最新数据
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+}
+
+permissionset 78016 "CityFM_Permissions"
+{
+    Assignable = true;
+    Caption = 'CityFM Permissions';
+    Permissions = tabledata "CityFM_Technician_List" = RIMD;
+}
+
+pageextension 78024 "SalesOrder_CityFM_Ext" extends "Sales Order"
+{
+    layout
+    {
+        modify("Ship-to Contact")
+        {
+            trigger OnLookup(var Text: Text): Boolean
+            var
+                TechList: Record "CityFM_Technician_List";
+                TechPage: Page "CityFM_Technicians";
+            begin
+                TechPage.LookupMode(true);
+
+                if TechPage.RunModal() = ACTION::LookupOK then begin
+                    TechPage.GetRecord(TechList);
+                    Rec.Validate("Ship-to Contact", TechList.EmpCode);
+                    Rec.Validate(FSG_GLD_ShipToEmail, TechList.Email);
+                    rec.Validate("Ship-to Phone No.", TechList.MobileNo);
+                    rec.Validate(FSG_GLD_DeliveryInstructions, 'Attn City FM ' + TechList.EmpName);
+                end;
+            end;
+        }
+    }
+}
+
+pageextension 78027 "SalesQuote_CityFM_Ext" extends "Sales Quote"
+{
+    layout
+    {
+        modify("Ship-to Contact")
+        {
+            trigger OnLookup(var Text: Text): Boolean
+            var
+                TechList: Record "CityFM_Technician_List";
+                TechPage: Page "CityFM_Technicians";
+            begin
+                TechPage.LookupMode(true);
+
+                if TechPage.RunModal() = ACTION::LookupOK then begin
+                    TechPage.GetRecord(TechList);
+                    Rec.Validate("Ship-to Contact", TechList.EmpCode);
+                    Rec.Validate(FSG_GLD_ShipToEmail, TechList.Email);
+                    rec.Validate("Ship-to Phone No.", TechList.MobileNo);
+                    rec.Validate(FSG_GLD_DeliveryInstructions, 'Attn City FM ' + TechList.EmpName);
+                end;
+            end;
+        }
+    }
+}
+
+
+pageextension 78025 "ShipToAddress_CityFM_Ext" extends "Ship-to Address"
+{
+    layout
+    {
+        modify(Contact)
+        {
+            trigger OnLookup(var Text: Text): Boolean
+            var
+                TechList: Record "CityFM_Technician_List";
+                TechPage: Page "CityFM_Technicians";
+            begin
+                TechPage.LookupMode(true);
+
+                if TechPage.RunModal() = ACTION::LookupOK then begin
+                    TechPage.GetRecord(TechList);
+                    Rec.Validate(Contact, TechList.EmpCode);
+                    Rec.Validate("E-Mail", TechList.Email);
+                    Rec.Validate("Phone No.", TechList.MobileNo);
+                    rec.Validate(FSG_GLD_DeliveryInstructions, 'Attn City FM ' + TechList.EmpName);
+                end;
+            end;
+        }
+    }
+}
+
+page 78026 "CityFM_Tech_Import"
+{
+    PageType = StandardDialog;
+    Caption = 'Import / Update Technicians';
+    UsageCategory = Tasks;
+    ApplicationArea = All;
+
+    layout
+    {
+        area(content)
+        {
+            group(Instructions)
+            {
+                Caption = 'Instructions';
+                field(Info; 'Copy from Excel (columns: Tech_No, Name, Phone, Email)')
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ShowCaption = false;
+                }
+
+                field(Info2; 'Donnot inclue header, copy data only')
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ShowCaption = false;
+                }
+            }
+            group(DataGroup)
+            {
+                Caption = 'Paste Excel Data Here';
+                field(RawData; RawText)
+                {
+                    ApplicationArea = All;
+                    MultiLine = true;
+                    ShowCaption = false;
+                    ToolTip = 'Paste your 4-column technician Excel lines here. by sequence "Technician Numer","Name","Phone number","Email". Donnot copy header';
+                }
+            }
+        }
+    }
+
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    begin
+        if CloseAction = Action::OK then begin
+            if RawText <> '' then
+                ProcessImport(RawText);
+        end;
+    end;
+
+    var
+        RawText: Text;
+
+    procedure ProcessImport(InputText: Text)
+    var
+        Lines: List of [Text];
+        Fields: List of [Text];
+        LineText: Text;
+        TechRec: Record "CityFM_Technician_List";
+        EmpNoVal: Text[30];
+        InsertedCount: Integer;
+        UpdatedCount: Integer;
+        TabChar: Text[1];
+    begin
+        TabChar[1] := 9; // \t (Tab)
+
+        // 1. 兼容性更强的方式拆分换行符：统一将 \r\n 或 \r 替换为 \n 再 Split
+        InputText := InputText.Replace(Format(Char(13)) + Format(Char(10)), Format(Char(10)));
+        InputText := InputText.Replace(Format(Char(13)), Format(Char(10)));
+        Lines := InputText.Split(Format(Char(10)));
+
+        foreach LineText in Lines do begin
+            // 过滤空行
+            if LineText.Trim() <> '' then begin
+                // 2. 按 Tab 拆分列
+                Fields := LineText.Split(TabChar);
+
+                if Fields.Count >= 1 then begin
+                    EmpNoVal := CopyStr(Fields.Get(1).Trim(), 1, MaxStrLen(TechRec.EmpNo));
+
+                    if EmpNoVal <> '' then begin
+                        if TechRec.Get(EmpNoVal) then begin
+                            // 已存在 -> 执行 Update
+                            PopulateFields(TechRec, Fields);
+                            TechRec.Modify(true);
+                            UpdatedCount += 1;
+                        end else begin
+                            // 不存在 -> 执行 Insert
+                            TechRec.Init();
+                            TechRec.EmpNo := EmpNoVal;
+                            PopulateFields(TechRec, Fields);
+                            TechRec.Insert(true);
+                            InsertedCount += 1;
+                        end;
+                    end;
+                end;
+            end;
+        end;
+
+        Message('Insert %1 new records，update %2 existing records.', InsertedCount, UpdatedCount);
+    end;
+
+    local procedure PopulateFields(var Rec: Record "CityFM_Technician_List"; Fields: List of [Text])
+    var
+        EmpNameVal: Text[100];
+    begin
+        // 第 2 列：EmpName
+        if Fields.Count >= 2 then begin
+            EmpNameVal := Fields.Get(2).Trim();
+            Rec.EmpName := CopyStr(EmpNameVal, 1, MaxStrLen(Rec.EmpName));
+        end;
+
+        // 自动拼接 EmpCode = EmpNo + "," + EmpName
+        Rec.EmpCode := CopyStr(Rec.EmpNo + ',' + Rec.EmpName, 1, MaxStrLen(Rec.EmpCode));
+
+        // 第 3 列：MobileNo
+        if Fields.Count >= 3 then
+            Rec.MobileNo := CopyStr(Fields.Get(3).Trim(), 1, MaxStrLen(Rec.MobileNo));
+
+        // 第 4 列：Email
+        if Fields.Count >= 4 then
+            Rec.Email := CopyStr(Fields.Get(4).Trim(), 1, MaxStrLen(Rec.Email));
+    end;
+
+    local procedure Char(Code: Integer): Char
+    var
+        c: Char;
+    begin
+        c := Code;
+        exit(c);
     end;
 }

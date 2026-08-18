@@ -288,6 +288,13 @@ pageextension 78007 BlanketSalesOrderExt extends "Blanket Sales Order Subform"
                 Caption = 'Line No.';
             }
         }
+        addafter("No.")
+        {
+            field("Vendor Item No."; Rec."Vendor Item No.")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 }
 
@@ -815,5 +822,15 @@ pageextension 78006 "Posted Sales CR Lines" extends "Posted Sales Credit Memo Li
     end;
 
 }
-
+pageextension 78022 "SalesOrderListExt" extends "Sales Order List"
+{
+    layout
+    {
+        modify("WSB Checkbox 1")
+        {
+            Visible = true;
+        }
+        moveafter("Ship-to Name"; "WSB Checkbox 1")
+    }
+}
 

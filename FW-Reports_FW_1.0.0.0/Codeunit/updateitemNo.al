@@ -131,3 +131,58 @@ permissionset 78015 "Itemmapping_Permi"
         codeunit "Batch Rename Items Job" = X,
         codeunit "Item List Default Filter" = X;
 }
+tableextension 78016 ItemJnlLineExt extends "Item Journal Line"
+{
+    fields
+    {
+        field(78016; "Vendor Item No."; Code[50])
+        {
+            Caption = 'Vendor Item No.';
+            FieldClass = FlowField;
+            // 假设你通过 Item 表关联查找
+            CalcFormula = lookup(Item."Vendor Item No." where("No." = field("Item No.")));
+            Editable = false;
+        }
+    }
+}
+pageextension 78020 PhysInvtJournalExt extends "Phys. Inventory Journal"
+{
+    layout
+    {
+        addafter("Item No.")
+        {
+            field("Vendor Item No."; Rec."Vendor Item No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the vendor item number.';
+            }
+        }
+    }
+}
+tableextension 78017 SalesLineExt extends "Sales Line"
+{
+    fields
+    {
+        field(78017; "Vendor Item No."; Code[50])
+        {
+            Caption = 'Vendor Item No.';
+            FieldClass = FlowField;
+            // 确保关联到 Item 表
+            CalcFormula = lookup(Item."Vendor Item No." where("No." = field("No.")));
+            Editable = false;
+        }
+    }
+}
+pageextension 78021 SalesQuoteSubformExt extends "Sales Quote Subform"
+{
+    layout
+    {
+        addafter("No.")
+        {
+            field("Vendor Item No."; Rec."Vendor Item No.")
+            {
+                ApplicationArea = All;
+            }
+        }
+    }
+}

@@ -10,5 +10,12 @@ pageextension 78000 PageExtension50001 extends "Sales Order Subform"
                 Editable = false;
             }
         }
+        addafter("No.")
+        {
+            field("Vendor Item No."; Rec."Vendor Item No.")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 }
