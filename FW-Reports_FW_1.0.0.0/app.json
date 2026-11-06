@@ -2,7 +2,7 @@
     "id": "6014f285-f61d-400c-a95f-a86ea3e3100f",
     "name": "FW-Reports",
     "publisher": "FW",
-    "version": "26.07.28.1700",
+    "version": "26.09.30.1700",
     "runtime": "15.0",
     "target": "Cloud",
     "platform": "26.0.38176.0",
@@ -18,6 +18,18 @@
             "name": "Base Application",
             "publisher": "Microsoft",
             "version": "26.4.37194.39023"
+        },
+        {
+            "id": "fbd38f3d-18b3-4ec9-bb78-03d32f79cdbb",
+            "name": "Attach-It",
+            "publisher": "Fenwick",
+            "version": "26.0.0.0"
+        },
+        {
+            "id": "ce8f7662-1bb5-4058-a4d2-57bebc14a7e8",
+            "name": "Fenwick Gold Account",
+            "publisher": "Fenwick Software",
+            "version": "26.0.0.0"
         },
         {
             "id": "ae8d9c30-16fe-4986-89cd-ef03b90c0c5d",

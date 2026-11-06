@@ -490,6 +490,18 @@ pageextension 78003 "Posted Sales Invoice Lines" extends "Posted Sales Invoice L
                 Caption = 'Order_date';
                 ToolTip = 'Order_date';
             }
+            field("Location Code"; Rec."Location Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Location Code';
+                ToolTip = 'Location Code';
+            }
+            field("Bin Code"; Rec."Bin Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Bin Code';
+                ToolTip = 'Bin Code';
+            }
         }
     }
 
@@ -793,6 +805,18 @@ pageextension 78006 "Posted Sales CR Lines" extends "Posted Sales Credit Memo Li
                 ApplicationArea = All;
                 Caption = 'exchange rate';
                 ToolTip = 'Posting Date';
+            }
+            field("Location Code"; Rec."Location Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Location Code';
+                ToolTip = 'Location Code';
+            }
+            field("Bin Code"; Rec."Bin Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Bin Code';
+                ToolTip = 'Bin Code';
             }
 
         }

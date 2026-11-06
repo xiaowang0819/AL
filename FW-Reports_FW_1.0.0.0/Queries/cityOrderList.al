@@ -14,7 +14,8 @@ codeunit 78401 "WSB Header Post Handler"
         if SalesHeader.IsTemporary then exit;
 
         if SalesHeader.Ship then begin
-            SalesHeader."WSB Date 1" := SalesHeader."Posting Date";
+            SalesHeader."WSB Date 1" := WorkDate();
+            SalesHeader.Modify(true);
         end;
         if SalesHeader.Invoice then begin
             SalesHeader.CalcFields(Amount);
@@ -106,6 +107,7 @@ query 78308 "weeklyCityAutoInvoices"
             column(ShipVia; "Shipment Method Code") { }
             column(Posting_Date; "Posting Date") { }
             column(WSB_Code_2; "WSB Code 2") { }
+            column(PO_received_date; "WSB Date 2") { }
             // 🌟 新增自定义列 ym：利用 SQL 表达式直接将日期转为 YYYYMM 文本格式
             column(postingYear; "Posting Date")
             {
